@@ -3,22 +3,25 @@
     <div class="container-fluid">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item">
-          <router-link to="/" class="nav-link" active-class="active"
-            >Home</router-link
-          >
+          <router-link to="/" class="nav-link" active-class="active">
+            Home</router-link>
         </li>      
-        <li class="nav-item">
+        <li v-if="this.store.isAuthenticated" class="nav-item">
           <router-link to="/articles" class="nav-link" active-class="active"
-            >Article</router-link
-          >
+            >Article</router-link>
         </li>
-        <li class="nav-item">
+
+        <li v-if="!this.store.isAuthenticated" class="nav-item">
           <router-link to="/login" class="nav-link" active-class="active"
             >Login</router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="this.store.isEmployer" class="nav-item">
           <router-link to="/replys" class="nav-link" active-class="active"
-            >Jobs</router-link>
+            >Replys</router-link>
+        </li>
+        <li v-if="this.store.isAdmin" class="nav-item">
+          <router-link to="/User" class="nav-link" active-class="active"
+            >Users</router-link>
         </li>
         
         <li v-if="this.store.isAuthenticated" class="nav-item">

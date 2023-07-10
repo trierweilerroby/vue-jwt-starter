@@ -15,6 +15,7 @@
             <button type='submit' class="btn btn-primary">Submit</button>
             <a href="/register">Register</a>
           </form>
+          <div class="alert alert-danger" for="wrongCredentials" v-if="store.wrongCredentials">You have entered th wrong password</div>
         </div>
       </div>
     </div>

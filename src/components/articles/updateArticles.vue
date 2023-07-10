@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Create a job offer</h1>
+        <h1>Update a job offer</h1>
 
         <form @submit.prevent="checkForm">
             <div class="mb-3">
@@ -13,7 +13,7 @@
             </div>
             <div class="mb-3">
                 <label for="salary" class="form-label">Salary</label>
-                <input v-model="article.salary" type="number" class="form-control" id="jobtitle">
+                <input v-model="article.salary" type="text" class="form-control" id="jobtitle">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -23,12 +23,15 @@
 import axios from "../../axious-auth.js";
 import { currentUserStore } from "../../stores/currentUser";
 export default {
+    props: {
+        id: Number
+    },
     setup() {
         return {
             store: currentUserStore(),
         };
     },
-    name: "CreateArticle",
+    name: "UpdateArticle",
     data() {
 
         return {
@@ -46,10 +49,11 @@ export default {
     methods: {
         update() {
             axios
-                .get("http://localhost/articles")
+                .get("http://localhost/articles/" + this.id)
                 .then((result) => {
+                    console.log(this.id);
+                    this.article = result.data;
                     console.log(result);
-                    this.products = result.data;
                 })
                 .catch((error) => console.log(error));
         },
@@ -58,11 +62,11 @@ export default {
                 //no alert
                 alert("Please fill in all the fields");
             } else {
-                this.createArticle();
+                this.updateArticle();
             }
         },
-        createArticle() {
-            axios.post("http://localhost/articles/insert", this.article)
+        updateArticle() {
+            axios.put("http://localhost/articles/update/" + this.id, this.article)
                 .then((result) => {
                     console.log(result);
                     this.$router.push("/articles");

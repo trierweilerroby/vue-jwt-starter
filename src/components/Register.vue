@@ -15,15 +15,19 @@
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">password</label>
-                <input v-model="user.password" type="text" class="form-control" id="password">
+                <input v-model="user.password" type="password" class="form-control" id="password">
+            </div>
+            <div>
+                <label for="certificate" class="form-label">certificate</label>
+                <input v-model="user.certificate" type="text" class="form-control" id="certificate">
             </div>
             <div class="mb-3">
-                <template>
-                    <select class="form-control" v-model="selected" @change="userType">
+                <label for="usertype" class="form-label">usertype</label>
+                <select class="form-control" v-model="user.type_id" id="usertype">
                         <option>Choose User type</option>
-                        <option v-for="usertype in usertypes" v-bind:value="usertype.id">{{ usertype.user_type }}</option>
+                        <option value="2">Employer</option>
+                        <option value="3">Looking for Job</option>
                     </select>
-                </template>
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -32,8 +36,8 @@
     </div>
 </template>
 <script>
-import axios from "../../axious-auth.js";
-import { currentUserStore } from "../../stores/currentUser.js";
+import axios from "../axious-auth.js";
+import { currentUserStore } from "../stores/currentUser.js";
 
 export default {
     setup() {
@@ -49,10 +53,10 @@ export default {
                 lastname: "",
                 email: "",
                 password: "",
-                usertype: ""
+                certificate: "",
+                type_id: "",
+                job_type: 0
             },
-            usertypes: [],
-            selected: ""
         }
     },
     mounted() {
@@ -60,9 +64,10 @@ export default {
     },
     methods: {
         checkForm() {
-            if (this.user.firstname == "" || this.user.lastname == "" || this.user.email == "" || this.user.password == "" || this.user.usertype == "") {
+            if (this.user.firstname == "" || this.user.lastname == "" || this.user.email == "" || this.user.password == "" || this.user.certificate == ""|| this.user.type_id == "") {
                 alert("Please fill in all the fields");
             } else {
+                console.log(this.user);
                 this.store.register(this.user).then(() => {
                     this.$router.push("/");
                 }).catch((error) => {
@@ -77,7 +82,8 @@ export default {
             }
         },
 
-    }
+    },
+    name: "Register",
 }
 
 

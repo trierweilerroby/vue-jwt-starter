@@ -10,16 +10,16 @@
                 {{ article.content }}
             </p>
             <p>
-                the salary is {{ article.salary }}
+                the salary is {{ article.salary }}€
             </p>
         </div>
         <br>
         <div class="card-footer">
             <p>
-                Posted by: {{ article.author }} at {{ article.posted_at }}
+                Posted by: {{ article.author_user.firstname }} at {{ article.posted_at }}
             </p>
         </div>
-        <div>
+        <div v-if="store.isUser">
             <form>
                 <label>Reply to job</label>
                 <input type="text" v-model="reply.content">
@@ -27,6 +27,15 @@
             <button type="Submit" class="btn btn-primary mt-3" @click="createReply">
                 Reply
             </button>
+        </div>
+        <div v-if="this.store.isEmployer || this.store.isAdmin">
+            <button class="btn btn-danger" @click="deleteArticle">Delete</button>
+        </div>
+        <div v-if="this.store.isEmployer">
+            <button class="btn btn-primary" @click="updateArticle">Update</button>
+        </div>
+        <div v-if="this.success" class="alert alert-success" role="alert">
+            {{ success }}
         </div>
     </div>
 </template>
@@ -53,6 +62,7 @@ export default {
                 reply_to: this.article.author,
                 article_id: this.article.id,
             },
+            success: ""
         }
     },
 
@@ -61,8 +71,20 @@ export default {
             axios.post('/replys/insert', this.reply)
                 .then((result) => {
                     console.log(result);
+                    this.success = "Reply created successfully";
+                    this.reply.content = "";
                 })
                 .catch((error) => console.log(error));
+        },
+        deleteArticle() {
+            axios.delete('/articles/delete/' + this.article.id)
+                .then((result) => {
+                    this.$emit("update");
+                })
+                .catch((error) => console.log(error));
+        },
+        updateArticle() {
+            this.$router.push("/articles/update/" + this.article.id);
         }
     },
 };

@@ -9,13 +9,20 @@ export const currentUserStore = defineStore("userSession", {
         type_id:"",
         firstname:"",
         lastname:"",
+        wrongCredentials: false,
     }),
     getters: {
         isAuthenticated(state) {
             return state.token !== "";
         },
-        isAdmin() {
+        isAdmin(state) {
             return state.type_id === 1;
+        },
+        isUser(state) {
+            return state.type_id === 3;
+        },
+        isEmployer(state) {
+            return state.type_id === 2;
         },
         getFirstName(state) {
             return state.firstname;
@@ -26,6 +33,9 @@ export const currentUserStore = defineStore("userSession", {
         getUserId(state) {
             return state.user_id;
         },
+        getCredentials(state) {
+            return state.wrongCredentials;
+        }
     },
 
         actions: {
@@ -49,6 +59,11 @@ export const currentUserStore = defineStore("userSession", {
                         email: email,
                         password: password
                     }).then(response => {
+                        if(response.data.jwt == null) {
+                            reject("Invalid email or password");
+                            this.wrongCredentials = true;
+                            return;
+                        }
                         this.token = response.data.jwt;
                         this.firstname = response.data.firstname;
                         this.lastname = response.data.lastname;
